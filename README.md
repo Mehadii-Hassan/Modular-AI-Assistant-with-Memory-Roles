@@ -25,7 +25,7 @@ A modular, Gemini-powered AI assistant featuring persistent conversation memory 
 1. Create a virtual environment
 
 ```bash
-conda create --prefix .\venv python=3.11 -y
+conda create --prefix .\venv python=3.10 -y
 ```
 
 2. Activate virtual environment

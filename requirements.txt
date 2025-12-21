@@ -1,3 +1,7 @@
+streamlit
 google-generativeai
 python-dotenv
-streamlit
+fpdf
+SpeechRecognition
+pyaudio
+pyttsx3

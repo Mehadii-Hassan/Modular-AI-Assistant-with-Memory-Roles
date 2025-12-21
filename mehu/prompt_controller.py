@@ -1,20 +1,12 @@
 class PromptController:
     def build_prompt(self, user_input, memory, role="Assistant"):
-        system_prompt = f"""
-            You are MEHU — an intelligent AI assistant.
-
-            Role: {role}
-
-            Rules:
-            - Be concise
-            - Be helpful
-            - If coding, explain step-by-step
-            - If career mentor, give practical advice
-
-            Conversation history:
-            {memory}
-
-            User: {user_input}
-            MEHU:
-            """
-        return system_prompt
+        memory_text = "\n".join(
+            [f"{m['role']}: {m['content']}" for m in memory]
+        )
+        prompt = (
+            f"You are a {role} AI Assistant.\n"
+            f"Conversation so far:\n{memory_text}\n"
+            f"User: {user_input}\n"
+            f"Assistant:"
+        )
+        return prompt
