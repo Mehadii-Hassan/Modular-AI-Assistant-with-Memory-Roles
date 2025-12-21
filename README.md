@@ -13,7 +13,7 @@ A modular, Gemini-powered AI assistant featuring persistent conversation memory 
 
 
 ## 📦 Requirements
-- python 3.11 or 
+- python 3.10 or higher
 - google-generativeai
 - python-dotenv
 - streamlit
