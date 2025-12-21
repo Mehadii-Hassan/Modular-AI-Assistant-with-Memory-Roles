@@ -4,4 +4,4 @@ python-dotenv
 fpdf
 SpeechRecognition
 pyaudio
-pyttsx3
+pyttsx3 
