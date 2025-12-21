@@ -8,7 +8,7 @@ from mehu.gemini_engine import GeminiEngine
 from mehu.prompt_controller import PromptController
 from mehu.memory import Memory
 from mehu.assistant import MehuAssistant
-from utils.voice_input import listen  # make sure you have a listen() function
+from utils.voice_input import listen  # Ensure you have a listen() function
 
 # -------------------------
 # Initialize TTS Engine
@@ -32,7 +32,9 @@ def speak(text):
 st.set_page_config(page_title="MEHU AI", layout="centered")
 st.title("🧠 MEHU – Your AI Assistant")
 
+# -------------------------
 # Sidebar
+# -------------------------
 role = st.sidebar.selectbox(
     "Select Role",
     ["Assistant", "Tutor", "Coding Assistant", "Career Mentor"]
@@ -58,25 +60,16 @@ mehu = MehuAssistant(engine, prompt_controller, memory)
 if "messages" not in st.session_state:
     st.session_state.messages = []
 
-if "voice_queue" not in st.session_state:
-    st.session_state.voice_queue = []
-
-# Render previous messages
-for msg in st.session_state.messages:
-    st.chat_message(msg["role"]).markdown(msg["content"])
-
 # -------------------------
-# Voice input button
+# Chat Input & Voice Button
 # -------------------------
-col1, col2 = st.columns([3,1])
-with col1:
-    user_input = st.chat_input("Ask MEHU...")
-with col2:
-    if st.button("🎤 Voice Input"):
-        voice_text = listen()
-        if voice_text:
-            st.session_state.voice_queue.append(voice_text)
-            st.success(f"🎤 You said: {voice_text}")
+user_input = st.chat_input("Ask MEHU...")
+
+voice_text = None
+if st.button("🎤 Voice Input"):
+    voice_text = listen()
+    if voice_text:
+        st.success(f"🎤 You said: {voice_text}")
 
 # -------------------------
 # Handle Input
@@ -84,30 +77,42 @@ with col2:
 voice_mode = False
 
 # Priority to voice input
-if st.session_state.voice_queue:
-    user_input = st.session_state.voice_queue.pop(0)
+if voice_text:
+    user_input = voice_text
     voice_mode = True
 
 if user_input:
     # 1️⃣ Save user message
     st.session_state.messages.append({"role": "user", "content": user_input})
-    st.chat_message("user").markdown(user_input)
 
-    # 2️⃣ Assistant placeholder
+    # 2️⃣ Render all messages
+    for msg in st.session_state.messages:
+        st.chat_message(msg["role"]).markdown(msg["content"])
+
+    # 3️⃣ Assistant thinking placeholder
     assistant_box = st.chat_message("assistant")
     placeholder = assistant_box.empty()
     placeholder.markdown("⌛ MEHU is thinking...")
 
-    # 3️⃣ Generate streaming response
-    streamed_text = ""
-    for token in mehu.respond_stream(user_input, role):
-        streamed_text += token
-        placeholder.markdown(streamed_text)
-        time.sleep(0.03)  # typing effect
-
-    # 4️⃣ Save assistant message
-    st.session_state.messages.append({"role": "assistant", "content": streamed_text})
-
-    # 5️⃣ Voice output if voice mode
+    # 4️⃣ Generate response
     if voice_mode:
-        speak(streamed_text)
+        # Voice input → short response
+        response = mehu.respond_short(user_input, role)
+    else:
+        # Text input → full response
+        response = mehu.respond(user_input, role)
+
+    # 5️⃣ Streaming for text input
+    if not voice_mode:
+        streamed_text = ""
+        for word in response.split():
+            streamed_text += word + " "
+            placeholder.markdown(streamed_text)
+            time.sleep(0.03)
+    else:
+        # Voice input → speak immediately
+        placeholder.markdown(response)
+        speak(response)
+
+    # 6️⃣ Save assistant message
+    st.session_state.messages.append({"role": "assistant", "content": response})
