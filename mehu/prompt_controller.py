@@ -1,12 +1,8 @@
 class PromptController:
-    def build_prompt(self, user_input, memory, role="Assistant"):
-        memory_text = "\n".join(
-            [f"{m['role']}: {m['content']}" for m in memory]
+    def build_prompt(self, user_input, memory):
+        history_list = memory.get_history()  # returns list of dicts
+        history = "\n".join(
+            [f"{msg['role']}: {msg['message']}" for msg in history_list]
         )
-        prompt = (
-            f"You are a {role} AI Assistant.\n"
-            f"Conversation so far:\n{memory_text}\n"
-            f"User: {user_input}\n"
-            f"Assistant:"
-        )
-        return prompt
+        system_instructions = "You are JARVIS, a helpful AI assistant."
+        return f"{system_instructions}\n{history}\nUser: {user_input}\nAssistant:"
