@@ -12,7 +12,7 @@ from mehu.assistant import MehuAssistant
 
 
 st.set_page_config(page_title="MEHU AI", layout="centered")
-st.title("🧠 MEHU – Your AI Assistant")
+st.title("🧠 MEHU – AI Assistant")
 
 # -------------------- SIDEBAR --------------------
 role = st.sidebar.selectbox(
