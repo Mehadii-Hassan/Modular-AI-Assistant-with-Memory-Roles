@@ -10,7 +10,7 @@ st.title("🧠 MEHU – AI Assistant")
 
 # Sidebar controls
 st.sidebar.header("⚙️ Controls")
-role = st.sidebar.selectbox("Choose JARVIS Role", ["General", "Tutor", "Coder", "Mentor"])
+role = st.sidebar.selectbox("Choose MEHU Role", ["General", "Tutor", "Coder", "Mentor"])
 
 if st.sidebar.button("Clear Memory"):
     open("conversation.json", "w").write("[]")
@@ -28,7 +28,7 @@ for msg in memory.get_history():
     st.chat_message(msg["role"]).write(msg["message"])
 
 # Chat input
-user_input = st.chat_input("Ask JARVIS...")
+user_input = st.chat_input("Ask MEHU...")
 if user_input:
     st.chat_message("user").write(user_input)
     response = jarvis.respond(user_input)
