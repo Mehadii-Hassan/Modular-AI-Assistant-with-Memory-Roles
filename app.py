@@ -20,7 +20,7 @@ def stream_response(prompt):
         if chunk.text:
             output += chunk.text
             placeholder.markdown(output)
-    return output
+    return output 
 
 
 # Page Config (Tab)
