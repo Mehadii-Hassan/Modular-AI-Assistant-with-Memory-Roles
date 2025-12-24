@@ -9,9 +9,8 @@ from mehu.memory import Memory
 from mehu.command_handler import CommandHandler
 from config.settings import Settings
 
-# -------------------------------
+
 # Streaming Response Function
-# -------------------------------
 def stream_response(prompt):
     model = genai.GenerativeModel("gemini-2.5-flash")
     response = model.generate_content(prompt, stream=True)
@@ -23,20 +22,17 @@ def stream_response(prompt):
             placeholder.markdown(output)
     return output
 
-# -------------------------------
-# Page Config (Tab Title Update)
-# -------------------------------
+
+# Page Config (Tab)
 st.set_page_config(page_title="Mehu-Assistant", page_icon="🧠")
 
-# -------------------------------
-# Greeting + Title
-# -------------------------------
-st.title("🧠 JARVIS – Your AI Assistant")
-st.write("👋 Hello! I’m JARVIS, ready to help you learn, code, or plan your career!")
 
-# -------------------------------
+# Greeting & Title
+st.title("🧠 MEHU – AI Assistant")
+st.write("👋 Hello! I’m MEHU, ready to help you learn, code, or plan your career!")
+
+
 # Sidebar Controls
-# -------------------------------
 st.sidebar.header("⚙️ Controls")
 role = st.sidebar.selectbox("Choose JARVIS Role", ["General", "Command", "Tutor", "Coder", "Mentor"])
 
@@ -44,14 +40,11 @@ if st.sidebar.button("Clear Memory"):
     open("conversation.json", "w").write("[]")
     st.sidebar.success("Memory cleared!")
 
-# -------------------------------
 # Chat Input
-# -------------------------------
 user_input = st.chat_input("Ask JARVIS...")
 
-# -------------------------------
+
 # Core Initialization
-# -------------------------------
 settings = Settings()
 engine = GeminiEngine(settings.load_api_key())
 memory = Memory()
@@ -59,21 +52,18 @@ prompt_controller = PromptController(role=role)
 jarvis = JarvisAssistant(engine, prompt_controller, memory)
 command_handler = CommandHandler()
 
-# -------------------------------
-# Session Greeting
-# -------------------------------
-if not memory.get_history():
-    st.chat_message("assistant").write("👋 Hi, I’m JARVIS. How can I help you today?")
 
-# -------------------------------
+# Session Greeting
+if not memory.get_history():
+    st.chat_message("assistant").write("👋 Hi, I’m MEHU. How can I help you today?")
+
+
 # Display Previous Chat History
-# -------------------------------
 for msg in memory.get_history():
     st.chat_message(msg["role"]).write(msg["message"])
 
-# -------------------------------
-# Chat Input + Response
-# -------------------------------
+
+# Chat Input and Response
 if user_input:
     st.chat_message("user").write(user_input)
 
