@@ -1,1 +1,10 @@
-[]
+[
+  {
+    "role": "user",
+    "message": "open facebook"
+  },
+  {
+    "role": "assistant",
+    "message": "As an AI, I can't directly open applications or websites on your device.\n\nHowever, you can easily open Facebook by:\n\n1.  **Typing \"facebook.com\" into your web browser's address bar** (like Chrome, Firefox, Safari, Edge).\n2.  **Clicking on the Facebook app icon** if you have it installed on your phone, tablet, or computer."
+  }
+]

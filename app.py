@@ -6,6 +6,7 @@ from mehu.assistant import JarvisAssistant
 from mehu.gemini_engine import GeminiEngine
 from mehu.prompt_controller import PromptController
 from mehu.memory import Memory
+from mehu.command_handler import CommandHandler  
 from config.settings import Settings
 
 # -------------------------------
@@ -32,7 +33,7 @@ st.write("👋 Hello! I’m JARVIS, ready to help you learn, code, or plan your 
 # Sidebar Controls
 # -------------------------------
 st.sidebar.header("⚙️ Controls")
-role = st.sidebar.selectbox("Choose JARVIS Role", ["General", "Tutor", "Coder", "Mentor"])
+role = st.sidebar.selectbox("Choose JARVIS Role", ["General", "Command", "Tutor", "Coder", "Mentor"])
 
 if st.sidebar.button("Clear Memory"):
     open("conversation.json", "w").write("[]")
@@ -51,6 +52,7 @@ engine = GeminiEngine(settings.load_api_key())
 memory = Memory()
 prompt_controller = PromptController(role=role)
 jarvis = JarvisAssistant(engine, prompt_controller, memory)
+command_handler = CommandHandler()
 
 # -------------------------------
 # Session Greeting
@@ -69,21 +71,29 @@ for msg in memory.get_history():
 # -------------------------------
 if user_input:
     st.chat_message("user").write(user_input)
-    prompt = prompt_controller.build_prompt(user_input, memory)
 
-    # Streaming response
-    response = stream_response(prompt)
-
-    # Save to memory
-    memory.add("user", user_input)
-    memory.add("assistant", response)
-
-    # Role-based styling
-    if role == "Tutor":
-        st.chat_message("assistant").write(f"📘 {response}")
-    elif role == "Coder":
-        st.chat_message("assistant").code(response)
-    elif role == "Mentor":
-        st.chat_message("assistant").write(f"💼 {response}")
+    if role == "Command":
+        # Handle command mode
+        command_response = command_handler.handle(user_input)
+        if command_response:
+            st.chat_message("assistant").write(command_response)
+        else:
+            st.chat_message("assistant").write("❌ Unknown command.")
     else:
-        st.chat_message("assistant").write(response)
+        # Assistant mode
+        prompt = prompt_controller.build_prompt(user_input, memory)
+        response = stream_response(prompt)
+
+        # Save to memory
+        memory.add("user", user_input)
+        memory.add("assistant", response)
+
+        # Role-based styling
+        if role == "Tutor":
+            st.chat_message("assistant").write(f"📘 {response}")
+        elif role == "Coder":
+            st.chat_message("assistant").code(response)
+        elif role == "Mentor":
+            st.chat_message("assistant").write(f"💼 {response}")
+        else:
+            st.chat_message("assistant").write(response)
