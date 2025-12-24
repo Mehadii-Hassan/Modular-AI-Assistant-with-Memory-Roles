@@ -53,6 +53,7 @@ pip install -r requirements.txt
 ## 🎥 Demo Video
 
 ▶️ Watch the demo here:  
+https://www.linkedin.com/posts/md-mehadi-hassan-cse_ai-python-geminiapi-activity-7409660122437853185-akTt?utm_source=share&utm_medium=member_desktop&rcm=ACoAAF59OiEBnUq-S7MNLSIjP3CnLpOTzgPZflc
 
 ---
 ## Author

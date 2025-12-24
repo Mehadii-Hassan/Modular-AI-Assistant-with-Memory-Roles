@@ -10,7 +10,7 @@ class CommandHandler:
             "open google": "https://www.google.com",
             "open linkedin": "https://www.linkedin.com",
             "open facebook": "https://www.facebook.com",
-            "open github": "https://www.github.com",
+            "open github": "https://github.com/Mehadii-Hassan",
             "open youtube": "https://www.youtube.com",
         }
 

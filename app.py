@@ -28,20 +28,20 @@ st.set_page_config(page_title="Mehu-Assistant", page_icon="🧠")
 
 
 # Greeting & Title
-st.title("🧠 MEHU – AI Assistant")
+st.title("🤖 MEHU – AI Assistant")
 st.write("👋 Hello! I’m MEHU, ready to help you learn, code, or plan your career!")
 
 
 # Sidebar Controls
 st.sidebar.header("⚙️ Controls")
-role = st.sidebar.selectbox("Choose JARVIS Role", ["General", "Command", "Tutor", "Coder", "Mentor"])
+role = st.sidebar.selectbox("Choose MEHU Role", ["General", "Command", "Tutor", "Coder", "Mentor"])
 
 if st.sidebar.button("Clear Memory"):
     open("conversation.json", "w").write("[]")
     st.sidebar.success("Memory cleared!")
 
 # Chat Input
-user_input = st.chat_input("Ask JARVIS...")
+user_input = st.chat_input("Ask MEHU...")
 
 
 # Core Initialization
