@@ -1,5 +1,7 @@
 import streamlit as st
 import json
+import google.generativeai as genai
+
 from mehu.assistant import JarvisAssistant
 from mehu.gemini_engine import GeminiEngine
 from mehu.prompt_controller import PromptController
@@ -7,37 +9,42 @@ from mehu.memory import Memory
 from config.settings import Settings
 
 # -------------------------------
-# Theme polish (Streamlit config)
+# Streaming Response Function
 # -------------------------------
-# 👉 Create a folder `.streamlit/config.toml` with this content:
-# [theme]
-# primaryColor="#00FFAA"
-# backgroundColor="#0E1117"
-# secondaryBackgroundColor="#262730"
-# textColor="#FAFAFA"
-# font="sans serif"
+def stream_response(prompt):
+    model = genai.GenerativeModel("gemini-2.5-flash")
+    response = model.generate_content(prompt, stream=True)
+    output = ""
+    placeholder = st.empty()
+    for chunk in response:
+        if chunk.text:
+            output += chunk.text
+            placeholder.markdown(output)
+    return output
 
 # -------------------------------
-# Greeting message
+# Greeting + Title
 # -------------------------------
 st.title("🧠 JARVIS – Your AI Assistant")
-st.write("👋 Hello! I’m JARVIS, your personal AI companion. Ready to help you learn, code, or plan your career!")
+st.write("👋 Hello! I’m JARVIS, ready to help you learn, code, or plan your career!")
 
 # -------------------------------
-# Sidebar controls
+# Sidebar Controls
 # -------------------------------
 st.sidebar.header("⚙️ Controls")
-
-# Role switching
 role = st.sidebar.selectbox("Choose JARVIS Role", ["General", "Tutor", "Coder", "Mentor"])
 
-# Clear memory button
 if st.sidebar.button("Clear Memory"):
     open("conversation.json", "w").write("[]")
     st.sidebar.success("Memory cleared!")
 
 # -------------------------------
-# Core initialization
+# Chat Input
+# -------------------------------
+user_input = st.chat_input("Ask JARVIS...")
+
+# -------------------------------
+# Core Initialization
 # -------------------------------
 settings = Settings()
 engine = GeminiEngine(settings.load_api_key())
@@ -46,26 +53,37 @@ prompt_controller = PromptController(role=role)
 jarvis = JarvisAssistant(engine, prompt_controller, memory)
 
 # -------------------------------
-# Session greeting (first time)
+# Session Greeting
 # -------------------------------
 if not memory.get_history():
     st.chat_message("assistant").write("👋 Hi, I’m JARVIS. How can I help you today?")
 
 # -------------------------------
-# Display previous chat history
+# Display Previous Chat History
 # -------------------------------
 for msg in memory.get_history():
     st.chat_message(msg["role"]).write(msg["message"])
 
 # -------------------------------
-# Chat input
+# Chat Input + Response
 # -------------------------------
-user_input = st.chat_input("Ask JARVIS...")
 if user_input:
     st.chat_message("user").write(user_input)
-    response = jarvis.respond(user_input)
+    prompt = prompt_controller.build_prompt(user_input, memory)
 
-    if "⚠️ Error" in response:
-        st.warning(response)
+    # Streaming response
+    response = stream_response(prompt)
+
+    # Save to memory
+    memory.add("user", user_input)
+    memory.add("assistant", response)
+
+    # Role-based styling
+    if role == "Tutor":
+        st.chat_message("assistant").write(f"📘 {response}")
+    elif role == "Coder":
+        st.chat_message("assistant").code(response)
+    elif role == "Mentor":
+        st.chat_message("assistant").write(f"💼 {response}")
     else:
         st.chat_message("assistant").write(response)
