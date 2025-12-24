@@ -23,18 +23,18 @@ class CommandHandler:
     def handle(self, user_input: str):
         text = user_input.lower().strip()
 
-        # ✅ Search command
+        # Search command
         if text.startswith("search google for"):
             query = text.replace("search google for", "").strip()
             webbrowser.open_new_tab(f"https://www.google.com/search?q={query}")
             return f"🔎 Searching Google for: {query}"
 
-        # ✅ Multi-command execution
+        # Multi-command execution
         if " and " in text:
             commands = [cmd.strip() for cmd in text.split(" and ")]
             responses = []
             for cmd in commands:
-                resp = self.handle(cmd)  # recursive call
+                resp = self.handle(cmd)  
                 if resp:
                     responses.append(resp)
             return " | ".join(responses)
@@ -57,9 +57,8 @@ class CommandHandler:
         # Not a command
         return None
 
-    # -------------------------------
+    
     # System command implementations
-    # -------------------------------
     def open_calculator(self):
         os_name = platform.system()
         if os_name == "Windows":
