@@ -6,7 +6,7 @@ from mehu.assistant import JarvisAssistant
 from mehu.gemini_engine import GeminiEngine
 from mehu.prompt_controller import PromptController
 from mehu.memory import Memory
-from mehu.command_handler import CommandHandler  
+from mehu.command_handler import CommandHandler
 from config.settings import Settings
 
 # -------------------------------
@@ -22,6 +22,11 @@ def stream_response(prompt):
             output += chunk.text
             placeholder.markdown(output)
     return output
+
+# -------------------------------
+# Page Config (Tab Title Update)
+# -------------------------------
+st.set_page_config(page_title="Mehu-Assistant", page_icon="🧠")
 
 # -------------------------------
 # Greeting + Title
