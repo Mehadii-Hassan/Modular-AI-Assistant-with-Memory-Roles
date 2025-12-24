@@ -9,4 +9,4 @@ class Settings:
     def load_api_key(self):
         if not self.api_key:
             raise ValueError("API key not found in .env")
-        return self.api_key
+        return self.api_key 
