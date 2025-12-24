@@ -18,4 +18,4 @@ class PromptController:
         else:
             system_instructions = "You are MEHU, a helpful AI assistant."
 
-        return f"{system_instructions}\n{history}\nUser: {user_input}\nAssistant:"
+        return f"{system_instructions}\n{history}\nUser: {user_input}\nAssistant:" 
