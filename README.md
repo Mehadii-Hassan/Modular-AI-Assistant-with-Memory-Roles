@@ -1,4 +1,4 @@
-# Modular-AI-Assistant-with-Memory-Roles 
+# MEHU-AI-Assistant-with-Memory-Roles 
 A modular, Gemini-powered AI assistant built with **persistent conversation memory** and **role-based behavior**. Roles include: **Tutor** (educational guidance), **Coding Assistant** (developer support), and **Career Mentor** (professional advice). 
 
 ---
